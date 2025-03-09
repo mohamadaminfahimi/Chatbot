@@ -1,4 +1,4 @@
-package org.aryanoor.Services;
+package org.aryanoor.services;
 
 import java.io.*;
 import java.net.HttpURLConnection;

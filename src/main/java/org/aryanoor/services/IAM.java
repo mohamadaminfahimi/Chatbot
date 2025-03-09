@@ -1,4 +1,4 @@
-package org.aryanoor.Services;
+package org.aryanoor.services;
 
 import java.io.IOException;
 import java.nio.file.Files;

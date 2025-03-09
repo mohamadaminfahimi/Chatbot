@@ -1,4 +1,4 @@
-package org.aryanoor.App;
+package org.aryanoor.app;
 
 import java.io.IOException;
 

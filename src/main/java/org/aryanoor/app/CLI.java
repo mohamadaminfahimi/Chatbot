@@ -1,7 +1,7 @@
-package org.aryanoor.App;
+package org.aryanoor.app;
 
-import org.aryanoor.Services.IAM;
-import org.aryanoor.Services.OpenRouterChat;
+import org.aryanoor.services.IAM;
+import org.aryanoor.services.OpenRouterChat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
