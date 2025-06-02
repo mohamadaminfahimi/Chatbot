@@ -1,15 +1,15 @@
-package org.aryanoor.app;
+package org.aryanoor.controller;
 
-import org.aryanoor.services.IAM;
-import org.aryanoor.services.OpenRouterChat;
+import org.aryanoor.model.OpenRouterChat;
+import org.aryanoor.view.*;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * The CLI class provides a command-line interface for user authentication and chatbot interaction.
@@ -37,7 +37,6 @@ class CLI {
      * @throws IOException If an error occurs while reading the file.
      */
     private void loadConfig() throws IOException {
-        Properties properties = new Properties();
         if (Files.exists(Paths.get(CONFIG_FILE))) {
             List<String> lines = Files.readAllLines(Paths.get(CONFIG_FILE));
             for (String line : lines) {
@@ -51,7 +50,12 @@ class CLI {
                 }
             }
         } else {
-            System.out.println("Configuration file not found. Please create 'config.properties' with apiUrl and apiKey.");
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Configuration file not found.\nPlease create 'config.properties' with apiUrl and apiKey.",
+                    "Configuration Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
             System.exit(1);
         }
     }
@@ -64,54 +68,20 @@ class CLI {
     public void run() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
+        OpenRouterChat chatBot = new OpenRouterChat(apiUrl, apiKey);
+
         // If no user is registered, prompt for registration
         if (!Files.exists(Paths.get("user.data"))) {
-            System.out.print("No registered user found. Please register.\nEnter username: ");
-            String username = reader.readLine();
-            System.out.print("Enter password: ");
-            String password = reader.readLine();
-            IAM newUser = new IAM(username, password);
-            newUser.signUp();
+            new SignUpForm(chatBot);
         }
-
-        System.out.println(">Hello Again! Let's login to your account");
 
         // Login process
-        while (true) {
-            System.out.print("Enter username: ");
-            String username = reader.readLine();
-            System.out.print("Enter password: ");
-            String password = reader.readLine();
-            IAM user = new IAM(username, password);
-            if (user.login(username, password)) {
-                break;
-            }
-            System.out.println("Try again.");
-        }
-
-        OpenRouterChat chatBot = new OpenRouterChat(apiUrl, apiKey);
-        System.out.println("Welcome to the chatbot! Type 'exit' to quit.");
-
-        // Chat loop
-        while (true) {
-            System.out.print("> Enter your question: ");
-            String question = reader.readLine();
-
-            if (question.equalsIgnoreCase("exit")) {
-                System.out.println("Exiting...");
-                break;
-            }
-
-            System.out.println("Thinking...");
-            String response = chatBot.sendChatRequest(question);
-            System.out.println(response);
-            System.out.println(">---------------------------------<");
-        }
+        else
+            new LoginFrame(chatBot);
     }
 
     /**
      * Processes the user input to ensure proper formatting.
-     *
      * Assignment Task:
      * - Capitalizes the first letter of each sentence.
      * - Ensures the sentence ends with a question mark.
